@@ -291,10 +291,16 @@ int main(int argc,char* argv[]) {
 		grader.bindScreenshotFunc(saveScreenshot);
 	}
 
+	// TODO remove test code
+	glm::vec3 test(3.0f, 2.0f, 4.0f);
+	Transform::rotate(0.0, test);
+
 	printHelp();
 	glutMainLoop();	
 	FreeImage_DeInitialise();
 	cleanup();
+
+
 
 	return 0;
 }

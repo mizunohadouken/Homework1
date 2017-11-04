@@ -3,7 +3,7 @@
 #include "Transform.h"
 
 
-// TODO remove
+// TODO remove test matrix
 void print3x3Matrix(mat3 mPrintMe)
 {
 	std::cout << mPrintMe[0][0] << " ";
@@ -19,12 +19,35 @@ void print3x3Matrix(mat3 mPrintMe)
 	return;
 }
 
+// TODO remove test matrix
+void print4x4Matrix(mat4 mPrintMe)
+{
+	std::cout << mPrintMe[0][0] << " ";
+	std::cout << mPrintMe[1][0] << " ";
+	std::cout << mPrintMe[2][0] << " ";
+	std::cout << mPrintMe[3][0] << "\n";
+	std::cout << mPrintMe[0][1] << " ";
+	std::cout << mPrintMe[1][1] << " ";
+	std::cout << mPrintMe[2][1] << " ";
+	std::cout << mPrintMe[3][1] << "\n";
+	std::cout << mPrintMe[0][2] << " ";
+	std::cout << mPrintMe[1][2] << " ";
+	std::cout << mPrintMe[2][2] << " ";
+	std::cout << mPrintMe[3][2] << "\n";
+	std::cout << mPrintMe[0][3] << " ";
+	std::cout << mPrintMe[1][3] << " ";
+	std::cout << mPrintMe[2][3] << " ";
+	std::cout << mPrintMe[3][3] << "\n";
+	return;
+}
+
 //Please implement the following functions:
 
 // Helper rotation function.  
-mat3 Transform::rotate(const float degrees, const vec3& axis) {
+mat3 Transform::rotate(const float degrees, const vec3& axis)
+{
 	float radians = degrees*pi / 180.0;
-	// TODO rotate function
+
 	glm::mat3 mRotation(0); // rotation matrix to return
 	glm::mat3 mIdentity(1.0);
 	glm::mat3 mAxisxAxisTranspose(axis.x * axis.x, axis.x * axis.y, axis.x * axis.z,
@@ -65,8 +88,30 @@ void Transform::up(float degrees, vec3& eye, vec3& up)
 mat4 Transform::lookAt(vec3 eye, vec3 up) {
   // TODO glm::lookat
 
+	// Create coordinate frame for camera
+	vec3 w = normalize(eye);
+	vec3 u = normalize(cross(up, w));
+	vec3 v = cross(w, u);
+
+	// Define Rotation Matrix
+	mat4 mCameraRotation(u.x, v.x, w.x, 0,
+					u.y, v.y, w.y, 0,
+					u.z, v.z, w.z, 0,
+					0 , 0, 0, 1);
+
+	// Define translation Matrix
+	mat4 mCameraTranslation(1);
+	mCameraTranslation[3][0] = -eye.x;
+	mCameraTranslation[3][1] = -eye.y;
+	mCameraTranslation[3][2] = -eye.z;
+
+	// Apply translation for camera (eye) location
+	mat4 mM = mCameraRotation * mCameraTranslation;
+
+//	TODO Remove this: print4x4Matrix(mCameraTranslation);
+
   // You will change this return call
-  return mat4();
+  return mM;
 }
 
 Transform::Transform()

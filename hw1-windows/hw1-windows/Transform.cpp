@@ -108,11 +108,68 @@ mat4 Transform::lookAt(vec3 eye, vec3 up) {
 	// Apply translation for camera (eye) location
 	mat4 mM = mCameraRotation * mCameraTranslation;
 
-//	TODO Remove this: print4x4Matrix(mCameraTranslation);
-
   // You will change this return call
   return mM;
 }
+
+
+mat4 Transform::perspective(float fovy, float aspect, float zNear, float zFar)
+{
+	mat4 ret;
+	// TODO perspective YOUR CODE FOR HW2 HERE
+	// New, to implement the perspective transform as well.  
+	float d = 1 / (tan((fovy *pi) / (2 * 180)));
+	float A = -(zFar + zNear) / (zFar - zNear);
+	float B = -(2 * zFar * zNear) / (zFar - zNear);
+
+	ret[0][0] = d / aspect;
+	ret[1][1] = d;
+	ret[2][2] = A;
+	ret[3][2] = B;
+	ret[2][3] = -1;
+	ret[3][3] = 0;
+
+	return ret;
+}
+
+mat4 Transform::scale(const float &sx, const float &sy, const float &sz)
+{
+	mat4 ret;
+	// TODO scale YOUR CODE FOR HW2 HERE
+	// Implement scaling 
+	ret[0][0] = sx;
+	ret[1][1] = sy;
+	ret[2][2] = sz;
+
+	return ret;
+}
+
+mat4 Transform::translate(const float &tx, const float &ty, const float &tz)
+{
+	mat4 ret;
+	// TODO translate YOUR CODE FOR HW2 HERE
+	// Implement translation 
+	ret[3][0] = tx;
+	ret[3][1] = ty;
+	ret[3][2] = tz;
+
+	return ret;
+}
+
+// To normalize the up direction and construct a coordinate frame.  
+// As discussed in the lecture.  May be relevant to create a properly 
+// orthogonal and normalized up. 
+// This function is provided as a helper, in case you want to use it. 
+// Using this function (in readfile.cpp or display.cpp) is optional.  
+
+vec3 Transform::upvector(const vec3 &up, const vec3 & zvec)
+{
+	vec3 x = glm::cross(up, zvec);
+	vec3 y = glm::cross(zvec, x);
+	vec3 ret = glm::normalize(y);
+	return ret;
+}
+
 
 Transform::Transform()
 {
